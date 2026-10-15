@@ -1,8 +1,7 @@
-﻿import type { FormField, FieldOption } from '../../types/form'
+import type { FormField, FieldOption } from '../../types/form'
 import { Input } from '../ui/Input'
-import { Textarea } from '../ui/Textarea'
 import { Button } from '../ui/Button'
-import { Trash2, Plus } from 'lucide-react'
+import { Trash2, Plus, Settings } from 'lucide-react'
 import { generateId } from '../../lib/id'
 
 interface PropertiesPanelProps {
@@ -13,7 +12,7 @@ interface PropertiesPanelProps {
 export function PropertiesPanel({ selectedField, onUpdateField }: PropertiesPanelProps) {
   if (!selectedField) {
     return (
-      <div className='p-4 h-full flex items-center justify-center'>
+      <div className='p-4 h-full flex items-center justify-center text-center'>
         <p className='text-[--color-text-muted] text-sm'>Select a field to edit its properties</p>
       </div>
     )
@@ -31,8 +30,8 @@ export function PropertiesPanel({ selectedField, onUpdateField }: PropertiesPane
   const addOption = () => {
     const newOption: FieldOption = {
       id: generateId(),
-      label: Option ,
-      value: option,
+      label: `Option ${(selectedField.options?.length || 0) + 1}`,
+      value: `option${(selectedField.options?.length || 0) + 1}`,
     }
     onUpdateField({
       options: [...(selectedField.options || []), newOption],
@@ -55,7 +54,10 @@ export function PropertiesPanel({ selectedField, onUpdateField }: PropertiesPane
 
   return (
     <div className='p-4 h-full overflow-y-auto'>
-      <h3 className='font-medium text-[--color-text] mb-4'>Field Properties</h3>
+      <div className="flex items-center gap-2 mb-4">
+        <Settings className="w-4 h-4 text-[--color-text-muted]" />
+        <h3 className='font-medium text-[--color-text]'>Field Properties</h3>
+      </div>
       <div className='space-y-4'>
         <Input
           label='Field Label'
@@ -81,7 +83,7 @@ export function PropertiesPanel({ selectedField, onUpdateField }: PropertiesPane
               onUpdateField({ required: e.target.checked })
               updateValidation('required', e.target.checked)
             }}
-            className='w-4 h-4'
+            className='w-4 h-4 rounded'
           />
           <span className='text-sm text-[--color-text]'>Required</span>
         </label>
@@ -108,7 +110,7 @@ export function PropertiesPanel({ selectedField, onUpdateField }: PropertiesPane
                 </Button>
               </div>
             ))}
-            <Button variant='secondary' size='sm' onClick={addOption} className='gap-1'>
+            <Button variant='secondary' size='sm' onClick={addOption} className='gap-1 w-full justify-center'>
               <Plus className='w-4 h-4' />
               Add Option
             </Button>

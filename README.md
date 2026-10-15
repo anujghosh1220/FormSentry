@@ -1,120 +1,102 @@
 ﻿# FormSentry
 
-A production-quality visual form builder and validation playground built with React, TypeScript, Vite, and Tailwind CSS.
+A local-first visual form builder and validation playground built with React 19, TypeScript, Vite and Tailwind CSS v4. Author, edit, duplicate, import/export and preview forms — entirely in the browser, with data stored in `localStorage`. No backend, no sync, no telemetry.
 
-## Features
+## Design system (Crimson Sentinel)
 
-- **Dashboard**: Manage all your forms in one place
-- **Visual Form Builder**: Three-panel editor with field library, canvas, and properties inspector
-- **Form Templates**: Pre-built Contact Us, Registration, and Feedback templates
-- **Validation Engine**: Comprehensive validation for all field types (required, email, length, numeric, date, etc.)
-- **Preview & Test**: Test forms as end users would see them
-- **Persistence**: Save forms in localStorage (works offline)
-- **Import/Export**: Share forms as JSON
-- **Responsive Design**: Works on desktop, tablet, and mobile
-- **TypeScript**: Fully typed for safety and maintainability
+Raw values live in `:root` and are re-exported to Tailwind through `@theme inline` in `src/index.css`, so both the legacy `bg-[--color-bg-surface]` arbitrary syntax and shadcn-style utilities (`bg-background`, `border-border`, `text-muted-foreground`, `ring-ring`, `bg-primary/20`) resolve from the same palette.
 
-## Technology Stack
+| Token | Value | Usage |
+|---|---|---|
+| `--color-bg` / `--background` | `#111113` | page background |
+| `--color-bg-surface` / `--card` | `#171719` | cards, panels |
+| `--color-bg-secondary` / `--muted` | `#202024` | inputs, secondary surfaces |
+| `--color-border` | `#303036` | borders, dividers |
+| `--color-primary` | `#F04452` | primary actions, focus |
+| `--color-text` / `--foreground` | `#F8F7F5` | primary text |
+| `--color-text-muted` | `#A1A1AA` | secondary text |
 
-- React 19
-- TypeScript
-- Vite
-- Tailwind CSS v4
-- React Router DOM
-- Lucide React
-- Vitest & React Testing Library
-- localStorage for persistence
+`src/components/ui/Button.tsx` remains the single unified button component (variants `primary | secondary | outline | ghost | danger | success`, sizes `sm | md | lg`) used by every other component in the app.
 
-## Getting Started
+## Implemented effects
 
-### Installation
+Each component was rebuilt from the supplied 21st.dev source and adapted to FormSentry content and the Crimson palette, keeping the original appearance and animation behaviour.
 
-```bash
-npm install
-```
+| Component | Source behaviour | Where it lives |
+|---|---|---|
+| **Efferd shell** | Persistent sidebar on desktop, Radix `Sheet` on mobile, real routing, recent-forms stack, command-menu trigger, Recharts stats | `src/components/ui/efferd-dashboard.tsx` |
+| **Command menu palette** | `cmdk` ranking inside a Radix dialog, ⌘K/Ctrl+K toggle, grouped results, footer hints, live form search and actions | `src/components/ui/command-menu-palette.tsx`, `src/components/command/CommandPalette.tsx`, `CommandContext.tsx` |
+| **Ink Orbit features** | Hatched bento page with three live SVG diagrams: team cluster → hub chip → stacking reports (SMIL packets, presence pulses), integrations hub cycling one tool at a time, scrubbable forecast chart with line-draw reveal | `src/components/ui/ink-orbit-features.tsx` |
+| **Interactive template gallery** | GSAP clip-path reveal of the hovered template's layout, cursor-following lerp offset, white highlight bar, row text colour transition, stacked fallback on coarse pointers | `src/components/ui/interactive-list-preview.tsx`, `src/components/effects/TemplateGallery.tsx` |
+| **Author form card** | Framer Motion spring stagger, avatar + icon picker, labelled fields with tooltip, real create/edit of form metadata | `src/components/ui/author-form-card.tsx`, `src/components/effects/AuthorFormDialog.tsx` |
+| **Hover glow button** | Cursor-following radial glow that tracks the pointer across the whole button surface | `src/components/ui/hover-glow-button.tsx`, `src/components/effects/HoverGlowButton.tsx` |
+| **Glass fold** | Real WebGL fragment shader (folded glass panes, creases, fresnel rim, screen blend, grain) with all uniforms as props, still frame under reduced motion, CSS fallback when WebGL is unavailable | `src/components/ui/glass-fold/GlassFold.tsx`, `src/components/effects/GlassFold.tsx` |
 
-### Development
+Template previews are generated as inline SVG data URIs from the real template definitions (`src/lib/templatePreview.ts`), so the gallery hover previews are offline artwork rather than remote images.
 
-```bash
-npm run dev
-```
+## Functionality preserved
 
-The app will be available at http://localhost:5173
-
-### Build
-
-```bash
-npm run build
-```
-
-### Preview Build
-
-```bash
-npm run preview
-```
-
-### Test
-
-```bash
-npm run test
-```
-
-### Lint
-
-```bash
-npm run lint
-```
-
-### Type Check
-
-```bash
-npx tsc --noEmit
-```
+- Dashboard listing with search, field-label search, and per-form actions
+- Create, rename, duplicate, export, import (JSON round-trip), delete with confirmation
+- Six templates: Contact Us, Registration, Feedback, Job Application, Event RSVP, Newsletter
+- Three-panel builder: field library, canvas, properties panel (add / delete / duplicate / reorder)
+- Nine field types with type-specific validation rules and custom messages
+- Live preview page with validation feedback
+- `localStorage` persistence under the `formsentry_forms` key
+- Routes: `/`, `/templates`, `/features`, `/builder/:id`, `/preview/:id`
+- Accessibility: focus-visible rings, keyboard-activatable rows, `prefers-reduced-motion` honoured by every animated component
 
 ## Architecture
 
-- `src/components/` - Reusable UI components
-- `src/pages/` - Page components (Dashboard, Builder, Preview)
-- `src/types/` - TypeScript type definitions
-- `src/utils/` - Utility functions (validation, etc.)
-- `src/lib/` - Core libraries (storage, ID generation)
-- `src/constants/` - Constants and templates
-- `src/hooks/` - Custom React hooks
+```
+src/
+├── App.tsx                      # routes + Efferd shell
+├── index.css                    # tokens, @theme inline, tw-animate-css, base layer
+├── components/
+│   ├── ui/                      # primitives + 21st.dev components
+│   │   ├── Button.tsx           # unified button (Crimson Sentinel)
+│   │   ├── efferd-dashboard.tsx # app shell (sidebar, top bar, routing)
+│   │   ├── ink-orbit-features.tsx
+│   │   ├── interactive-list-preview.tsx
+│   │   ├── author-form-card.tsx
+│   │   ├── hover-glow-button.tsx
+│   │   ├── command-menu-palette.tsx
+│   │   ├── glass-fold/          # WebGL shader
+│   │   ├── dialog.tsx sheet.tsx tooltip.tsx avatar.tsx collapsible.tsx chart.tsx
+│   │   └── Card.tsx Input.tsx Label.tsx Textarea.tsx Separator.tsx Skeleton.tsx
+│   ├── command/                 # palette + open-state context
+│   ├── effects/                 # FormSentry-adapted wrappers
+│   └── builder/                 # field library, canvas, properties panel
+├── pages/                       # Dashboard, Templates, Features, Builder, Preview
+├── lib/                         # storage, id, utils, template previews, form icons
+├── constants/templates.ts
+├── types/form.ts
+└── test/                        # vitest + jsdom integration test
+```
 
-## Data Persistence & Privacy
+## Scripts
 
-Forms are stored locally in your browser using localStorage. No data is sent to external servers. This means:
-- Forms are only available on the device/browser where they were created
-- Clearing browser data will remove saved forms
-- No account or authentication required
+```bash
+npm run dev        # Vite dev server
+npm run build      # tsc -b && vite build
+npm run test       # Vitest (unit + jsdom integration)
+npm run lint       # Oxlint
+npx tsc -b         # Type-check only
+```
 
-## Import/Export
+## Verification
 
-- Export: Download form configuration as JSON from Dashboard or Builder
-- Import: Load form from JSON file (creates a copy to avoid overwriting)
+```
+TypeScript:  0 errors
+Oxlint:      0 errors
+Vitest:      4 files, 16 tests passed
+Production build: successful (dist/assets 59 KB CSS, 1093 KB JS)
+Browser:      dashboard, templates, features, builder and preview inspected at
+              320–1440px with no horizontal overflow; ⌘K palette, hover reveal,
+              cursor glow, author dialog and mobile navigation sheet verified
+              interacting with the running app
+```
 
-## Validation Behavior
+## License
 
-- Required fields: Must have a value (checkboxes must be checked)
-- Email: Valid email format required
-- Text/Textarea/Password: Min/max length enforcement
-- Number: Numeric validation with min/max bounds
-- Select/Radio: Must select a valid option
-- Date: Date range validation when configured
-- Optional fields: Empty values pass validation unless other rules apply
-
-## Known Limitations
-
-- Forms are stored locally only (not synced across devices)
-- No form submission backend (submissions are validated client-side only)
-- Limited undo/redo functionality
-
-## Deployment
-
-This app can be deployed for free on:
-- [Vercel](https://vercel.com/) - Connect repo and deploy
-- [Netlify](https://www.netlify.com/) - Drag and drop `dist/` folder
-- [GitHub Pages](https://pages.github.com/) - Static hosting
-
-Build with `npm run build` and deploy the `dist/` directory.
-
+MIT.

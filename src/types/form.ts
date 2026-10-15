@@ -55,6 +55,8 @@ export interface FormDefinition {
   id: string
   title: string
   description?: string
+  /** Icon key shown next to the form in the dashboard. */
+  icon?: string
   fields: FormField[]
   createdAt: string
   updatedAt: string

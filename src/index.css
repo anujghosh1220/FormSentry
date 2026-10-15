@@ -1,41 +1,152 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ------------------------------------------------------------------
+   Crimson Sentinel design tokens.
+
+   The project is dark-first. Raw values live in :root under semantic
+   names (--background, --primary, …) and are re-exported to Tailwind
+   through @theme inline so utilities like `bg-background`,
+   `border-border`, `text-muted-foreground` and `bg-primary/20` all
+   resolve. The legacy --color-* tokens stay for the older arbitrary
+   value syntax used across the builder pages.
+------------------------------------------------------------------ */
 
 :root {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  line-height: 1.6;
-  font-weight: 400;
-  color: var(--color-text);
-  background-color: var(--color-bg-alt);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* legacy FormSentry tokens (kept for bg-[--color-…] usage) */
+  --color-bg: #111113;
+  --color-bg-alt: #111113;
+  --color-bg-surface: #171719;
+  --color-bg-secondary: #202024;
+  --color-border: #303036;
+  --color-text: #f8f7f5;
+  --color-text-muted: #a1a1aa;
+  --color-primary: #f04452;
+  --color-primary-hover: #d83240;
+  --color-danger: #ef4444;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-accent: #f04452;
+  --color-ring: rgba(240, 68, 82, 0.5);
+
+  /* shadcn-compatible semantic tokens */
+  --background: #111113;
+  --foreground: #f8f7f5;
+  --card: #171719;
+  --card-foreground: #f8f7f5;
+  --popover: #171719;
+  --popover-foreground: #f8f7f5;
+  --primary: #f04452;
+  --primary-foreground: #ffffff;
+  --secondary: #202024;
+  --secondary-foreground: #f8f7f5;
+  --muted: #202024;
+  --muted-foreground: #a1a1aa;
+  --accent: #202024;
+  --accent-foreground: #f8f7f5;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --surface: #171719;
+  --border: #303036;
+  --input: #303036;
+  --ring: #f04452;
+  --success: #22c55e;
+  --success-foreground: #ffffff;
+  --warning: #f59e0b;
+  --warning-foreground: #1c1206;
+  --info: #3b82f6;
+  --info-foreground: #ffffff;
+  --radius: 0.625rem;
+
+  /* type */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo,
+    Consolas, "Liberation Mono", monospace;
+
+  color-scheme: dark;
 }
 
-:root {
-  --color-bg: #ffffff;
-  --color-bg-alt: #f9fafb;
-  --color-border: #e5e7eb;
-  --color-text: #0f172a;
-  --color-text-muted: #475569;
-  --color-primary: #6366f1;
-  --color-primary-hover: #4f46e5;
-  --color-danger: #dc2626;
-  --color-success: #16a34a;
-  --color-warning: #d97706;
-  --color-accent: #6366f1;
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: var(--color-bg-alt);
-  color: var(--color-text);
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
 }
 
-#root {
-  min-height: 100vh;
+/* The bento/shell layers draw their own surfaces; keep global rules from
+   flattening them. */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

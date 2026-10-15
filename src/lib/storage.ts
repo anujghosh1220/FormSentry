@@ -15,8 +15,8 @@ export function loadForms(): FormDefinition[] {
       return parsed.forms
     }
     return []
-  } catch (e) {
-    console.error('Failed to load forms from localStorage:', e)
+} catch {
+    console.error('Failed to load forms from localStorage')
     return []
   }
 }
@@ -45,7 +45,7 @@ export function importForm(json: string): FormDefinition {
       throw new Error('Invalid form structure')
     }
     return parsed
-  } catch (e) {
+} catch {
     throw new Error('Invalid JSON or form structure')
   }
 }

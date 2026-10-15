@@ -1,35 +1,36 @@
-﻿import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { ArrowLeft, RefreshCw } from "lucide-react"
 import type { FormDefinition, FormField } from "../types/form"
 import { loadForms } from "../lib/storage"
 import { validateForm } from "../utils/validation"
 import { Button } from "../components/ui/Button"
-import { Header } from "../components/layout/Header"
+
+function emptyValuesFor(form: FormDefinition): Record<string, any> {
+  const values: Record<string, any> = {}
+  form.fields.forEach((f) => {
+    values[f.id] = f.type === "checkbox" ? false : ""
+  })
+  return values
+}
 
 export function PreviewPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const [form, setForm] = useState<FormDefinition | null>(null)
-  const [values, setValues] = useState<Record<string, any>>({})
+  const [form] = useState<FormDefinition | null>(() => {
+    const forms = loadForms()
+    return forms.find((f) => f.id === id) || null
+  })
+  const [values, setValues] = useState<Record<string, any>>(() =>
+    form ? emptyValuesFor(form) : {}
+  )
   const [errors, setErrors] = useState<Record<string, string[]>>({})
   const [submitted, setSubmitted] = useState(false)
 
-  useEffect(() => {
-    const forms = loadForms()
-    const found = forms.find((f) => f.id === id)
-    if (found) {
-      setForm(found)
-      const initialValues: Record<string, any> = {}
-      found.fields.forEach((f) => {
-        if (f.type === "checkbox") initialValues[f.id] = false
-        else initialValues[f.id] = ""
-      })
-      setValues(initialValues)
-    } else {
-      navigate("/")
-    }
-  }, [id, navigate])
+  if (!form) {
+    navigate("/")
+    return null
+  }
 
   const handleChange = (fieldId: string, value: any) => {
     setValues((prev) => ({ ...prev, [fieldId]: value }))
@@ -55,12 +56,7 @@ export function PreviewPage() {
 
   const handleReset = () => {
     if (!form) return
-    const initialValues: Record<string, any> = {}
-    form.fields.forEach((f) => {
-      if (f.type === "checkbox") initialValues[f.id] = false
-      else initialValues[f.id] = ""
-    })
-    setValues(initialValues)
+    setValues(emptyValuesFor(form))
     setErrors({})
     setSubmitted(false)
   }
@@ -68,37 +64,44 @@ export function PreviewPage() {
   const renderField = (field: FormField) => {
     const fieldErrors = errors[field.id] || []
     const isInvalid = fieldErrors.length > 0
+    const fieldId = field.id
 
     return (
-      <div key={field.id} className="space-y-1.5">
-        <label className="block text-sm font-medium text-[--color-text]">
+      <div key={fieldId} className="space-y-1.5">
+        <label htmlFor={`preview-${fieldId}`} className="block text-sm font-medium text-[--color-text]">
           {field.label}
           {field.required && <span className="text-[--color-danger] ml-1">*</span>}
         </label>
         {field.type === "text" || field.type === "email" || field.type === "password" || field.type === "number" || field.type === "date" ? (
           <input
+            id={`preview-${fieldId}`}
             type={field.type}
-            value={values[field.id] || ""}
-            onChange={(e) => handleChange(field.id, e.target.value)}
+            value={values[fieldId] || ""}
+            onChange={(e) => handleChange(fieldId, e.target.value)}
             placeholder={field.placeholder}
-            className={`w-full px-3 py-2 border rounded-lg bg-white ${isInvalid ? "border-[--color-danger]" : "border-[--color-border]"}`}
+            className={`w-full px-3 py-2 border rounded-lg bg-[--color-bg-secondary] text-[--color-text] placeholder-[--color-text-muted] focus:outline-none focus:ring-2 focus:ring-[--color-ring] focus:border-transparent transition-colors ${isInvalid ? "border-[--color-danger]" : "border-[--color-border]"}`}
             aria-invalid={isInvalid ? "true" : "false"}
+            aria-describedby={isInvalid ? `preview-${fieldId}-error` : field.helpText ? `preview-${fieldId}-help` : undefined}
           />
         ) : field.type === "textarea" ? (
           <textarea
-            value={values[field.id] || ""}
-            onChange={(e) => handleChange(field.id, e.target.value)}
+            id={`preview-${fieldId}`}
+            value={values[fieldId] || ""}
+            onChange={(e) => handleChange(fieldId, e.target.value)}
             placeholder={field.placeholder}
             rows={4}
-            className={`w-full px-3 py-2 border rounded-lg bg-white ${isInvalid ? "border-[--color-danger]" : "border-[--color-border]"}`}
+            className={`w-full px-3 py-2 border rounded-lg bg-[--color-bg-secondary] text-[--color-text] placeholder-[--color-text-muted] focus:outline-none focus:ring-2 focus:ring-[--color-ring] focus:border-transparent transition-colors ${isInvalid ? "border-[--color-danger]" : "border-[--color-border]"}`}
             aria-invalid={isInvalid ? "true" : "false"}
+            aria-describedby={isInvalid ? `preview-${fieldId}-error` : field.helpText ? `preview-${fieldId}-help` : undefined}
           />
         ) : field.type === "select" ? (
           <select
-            value={values[field.id] || ""}
-            onChange={(e) => handleChange(field.id, e.target.value)}
-            className={`w-full px-3 py-2 border rounded-lg bg-white ${isInvalid ? "border-[--color-danger]" : "border-[--color-border]"}`}
+            id={`preview-${fieldId}`}
+            value={values[fieldId] || ""}
+            onChange={(e) => handleChange(fieldId, e.target.value)}
+            className={`w-full px-3 py-2 border rounded-lg bg-[--color-bg-secondary] text-[--color-text] focus:outline-none focus:ring-2 focus:ring-[--color-ring] focus:border-transparent transition-colors ${isInvalid ? "border-[--color-danger]" : "border-[--color-border]"}`}
             aria-invalid={isInvalid ? "true" : "false"}
+            aria-describedby={isInvalid ? `preview-${fieldId}-error` : field.helpText ? `preview-${fieldId}-help` : undefined}
           >
             {field.options?.map((opt) => (
               <option key={opt.id} value={opt.value}>
@@ -107,16 +110,17 @@ export function PreviewPage() {
             ))}
           </select>
         ) : field.type === "radio" ? (
-          <div className="space-y-2">
+          <div className="space-y-2" role="radiogroup" aria-labelledby={`preview-${fieldId}`}>
             {field.options?.map((opt) => (
               <label key={opt.id} className="flex items-center gap-2">
                 <input
                   type="radio"
-                  name={field.id}
+                  name={fieldId}
                   value={opt.value}
-                  checked={values[field.id] === opt.value}
-                  onChange={(e) => handleChange(field.id, e.target.value)}
-                  className={isInvalid ? "border-[--color-danger]" : ""}
+                  checked={values[fieldId] === opt.value}
+                  onChange={(e) => handleChange(fieldId, e.target.value)}
+                  className={`rounded-full focus:outline-none focus:ring-2 focus:ring-[--color-ring] ${isInvalid ? "border-[--color-danger]" : ""}`}
+                  aria-describedby={isInvalid ? `preview-${fieldId}-error` : undefined}
                 />
                 <span className="text-sm text-[--color-text]">{opt.label}</span>
               </label>
@@ -125,17 +129,22 @@ export function PreviewPage() {
         ) : field.type === "checkbox" ? (
           <label className="flex items-center gap-2">
             <input
+              id={`preview-${fieldId}`}
               type="checkbox"
-              checked={values[field.id] || false}
-              onChange={(e) => handleChange(field.id, e.target.checked)}
-              className={isInvalid ? "border-[--color-danger]" : ""}
+              checked={values[fieldId] || false}
+              onChange={(e) => handleChange(fieldId, e.target.checked)}
+              className={`rounded focus:outline-none focus:ring-2 focus:ring-[--color-ring] ${isInvalid ? "border-[--color-danger]" : ""}`}
+              aria-invalid={isInvalid ? "true" : "false"}
+              aria-describedby={isInvalid ? `preview-${fieldId}-error` : field.helpText ? `preview-${fieldId}-help` : undefined}
             />
             <span className="text-sm text-[--color-text]">{field.label}</span>
           </label>
         ) : null}
-        {field.helpText && !isInvalid && <p className="text-xs text-[--color-text-muted]">{field.helpText}</p>}
+        {field.helpText && !isInvalid && (
+          <p id={`preview-${fieldId}-help`} className="text-xs text-[--color-text-muted]">{field.helpText}</p>
+        )}
         {isInvalid && (
-          <div className="text-xs text-[--color-danger]">
+          <div id={`preview-${fieldId}-error`} className="text-xs text-[--color-danger]">
             {fieldErrors.map((err, idx) => (
               <div key={idx}>{err}</div>
             ))}
@@ -145,12 +154,9 @@ export function PreviewPage() {
     )
   }
 
-  if (!form) return null
-
   return (
-    <div className="min-h-screen bg-[--color-bg-alt]">
-      <Header />
-      <div className="max-w-2xl mx-auto px-4 py-8">
+    <div className="pb-4">
+      <div className="mx-auto max-w-2xl px-4 py-4">
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm" onClick={() => navigate(`/builder/${form.id}`)} className="gap-1">
@@ -164,7 +170,7 @@ export function PreviewPage() {
           </Button>
         </div>
 
-        <div className="bg-white border border-[--color-border] rounded-lg p-6">
+        <div className="bg-[--color-bg-surface] border border-[--color-border] rounded-lg p-6">
           <div className="mb-6">
             <h1 className="text-2xl font-semibold text-[--color-text] mb-2">{form.title}</h1>
             {form.description && <p className="text-[--color-text-muted]">{form.description}</p>}

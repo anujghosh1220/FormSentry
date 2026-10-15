@@ -1,4 +1,4 @@
-﻿import { 
+import { 
   Type, Mail, Lock, Hash, FileText, List, CircleDot, CheckSquare, Calendar 
 } from 'lucide-react'
 import type { FieldType } from '../../types/form'
@@ -52,7 +52,7 @@ export function FieldLibrary({ onAddField }: FieldLibraryProps) {
           <button
             key={type}
             onClick={() => handleAdd(type)}
-            className='w-full flex items-center gap-2 p-2 bg-white border border-[--color-border] rounded-lg hover:border-[--color-primary] hover:bg-[--color-bg-alt] transition-colors text-left'
+            className='w-full flex items-center gap-2 p-2 bg-[--color-bg-secondary] border border-[--color-border] rounded-lg hover:border-[--color-primary] hover:bg-[--color-bg-surface] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[--color-ring] transition-colors text-left'
           >
             <Icon className='w-4 h-4 text-[--color-text-muted]' />
             <span className='text-sm text-[--color-text]'>{label}</span>

@@ -1,4 +1,5 @@
-﻿import { forwardRef, InputHTMLAttributes } from "react"
+import { forwardRef, useId, type InputHTMLAttributes } from "react"
+import { cn } from "../../lib/utils"
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
@@ -8,7 +9,8 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className = "", label, error, helpText, id, ...props }, ref) => {
-    const inputId = id || Math.random().toString(36).slice(2)
+    const reactId = useId()
+    const inputId = id || reactId
 
     return (
       <div className="space-y-1.5">
@@ -21,7 +23,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           id={inputId}
-          className={`w-full px-3 py-2 border rounded-lg bg-white text-[--color-text] placeholder-[--color-text-muted] focus:outline-none focus:ring-2 focus:ring-[--color-primary] focus:border-transparent transition-colors ${error ? "border-[--color-danger]" : "border-[--color-border]"} ${className}`}
+          className={cn(
+            "w-full px-3 py-2 border rounded-lg bg-[--color-bg-secondary] text-[--color-text] placeholder-[--color-text-muted] focus:outline-none focus:ring-2 focus:ring-[--color-ring] focus:border-transparent transition-colors",
+            error ? "border-[--color-danger]" : "border-[--color-border]",
+            className
+          )}
           aria-invalid={error ? "true" : "false"}
           aria-describedby={error ? inputId + "-error" : helpText ? inputId + "-help" : undefined}
           {...props}
@@ -42,4 +48,3 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 )
 
 Input.displayName = "Input"
-

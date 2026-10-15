@@ -1,5 +1,5 @@
 ﻿import { describe, it, expect } from "vitest"
-import { validateField, validateForm } from "./validation"
+import { validateField } from "./validation"
 import type { FormField } from "../types/form"
 
 describe("validation", () => {
