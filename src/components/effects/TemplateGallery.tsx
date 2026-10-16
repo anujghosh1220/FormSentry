@@ -115,14 +115,14 @@ export function TemplateGallery({ onSelectTemplate, className }: TemplateGallery
           <h2 className="mt-2 font-mono text-xl font-medium tracking-tight text-white text-balance sm:text-2xl">
             Elevating interaction through motion
           </h2>
-          <p className="mt-1 font-mono text-xs text-white/40">
+          <p className="mt-1 font-mono text-xs text-white/60">
             Hover a row to reveal the layout · click to start from it
           </p>
         </div>
         <button
           type="button"
           onClick={() => onSelectTemplate(selected)}
-          className="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-[#101013]"
+          className="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg bg-primary px-4 py-2 text-sm font-medium text-[#111113] transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-[#101013]"
         >
           <span
             aria-hidden="true"
@@ -144,7 +144,7 @@ export function TemplateGallery({ onSelectTemplate, className }: TemplateGallery
         className="text-white"
       />
 
-      <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 px-5 py-4 font-mono text-[11px] uppercase tracking-widest text-white/40 sm:px-6">
+      <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 px-5 py-4 font-mono text-[11px] uppercase tracking-widest text-white/60 sm:px-6">
         <span>
           {FORMSENTRY_TEMPLATES.length} templates · selected:{" "}
           <span className="text-white/70">{selected.label}</span>

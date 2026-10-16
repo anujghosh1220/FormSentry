@@ -11,7 +11,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseStyles = "inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#111113] disabled:opacity-50 disabled:cursor-not-allowed"
 
     const variants: Record<string, string> = {
-      primary: "bg-[--color-primary] text-white hover:bg-[--color-primary-hover] focus:ring-[--color-ring]",
+      primary: "bg-[--color-primary] text-[#111113] hover:bg-[--color-primary-hover] focus:ring-[--color-ring]",
       secondary: "bg-[--color-bg-secondary] text-[--color-text] border border-[--color-border] hover:bg-[--color-bg-surface] focus:ring-[--color-ring]",
       outline: "bg-transparent text-[--color-text] border border-[--color-border] hover:bg-[--color-bg-secondary] focus:ring-[--color-ring]",
       ghost: "bg-transparent text-[--color-text-muted] hover:text-[--color-text] hover:bg-[--color-bg-secondary]",
