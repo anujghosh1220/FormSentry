@@ -70,7 +70,7 @@ describe("FormSentry app integration", () => {
     expect(screen.getAllByRole("button", { name: /Author a form/ }).length).toBeGreaterThan(0)
 
     /* ink orbit bento: three live diagrams + copy */
-    expect(screen.getByRole("img", { name: /edits flow through FormSentry/ })).toBeTruthy()
+    expect(screen.getByRole("img", { name: /edits flow through/ })).toBeTruthy()
     expect(screen.getByRole("group", { name: "Integrations" })).toBeTruthy()
     expect(screen.getByRole("img", { name: /Validation forecast chart/ })).toBeTruthy()
     expect(screen.getByText("Live form editing")).toBeTruthy()

@@ -7,12 +7,12 @@ import {
   Library,
   Menu,
   Search,
-  ShieldCheck,
   Sparkles,
   Wand2,
   HardDrive,
 } from "lucide-react"
 import { cn } from "../../lib/utils"
+import { BrandLogo } from "./brand-logo"
 import { Button } from "./Button"
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "./sheet"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./collapsible"
@@ -81,7 +81,10 @@ export function EfferdDashboard({ children }: EfferdDashboardProps) {
               </main>
               <footer className="border-t border-border px-4 py-5 sm:px-6 lg:px-8">
                 <div className="mx-auto flex w-full max-w-[1400px] flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
-                  <p>FormSentry — forms stay in this browser. No backend, no sync, no telemetry.</p>
+                  <p className="flex items-center gap-2">
+                    <BrandLogo height={18} alt="" aria-hidden="true" />
+                    Forms stay in this browser. No backend, no sync, no telemetry.
+                  </p>
                   <p className="flex items-center gap-1.5">
                     <HardDrive className="h-3.5 w-3.5" aria-hidden="true" />
                     Local storage
@@ -121,13 +124,7 @@ function TopBar() {
       </Sheet>
 
       <Link to="/" className="flex items-center gap-2.5">
-        <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15 ring-1 ring-inset ring-primary/30">
-          <ShieldCheck className="h-5 w-5 text-primary" aria-hidden="true" />
-        </span>
-        <span className="flex flex-col leading-none">
-          <span className="text-[15px] font-semibold tracking-tight text-foreground">FormSentry</span>
-          <span className="text-[11px] text-muted-foreground">Form studio</span>
-        </span>
+        <BrandLogo height={30} className="shrink-0" />
       </Link>
 
       <nav aria-label="Primary" className="ml-6 hidden items-center gap-1 md:flex">

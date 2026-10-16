@@ -11,9 +11,8 @@ export function FeaturesBento({ className }: { className?: string }) {
     <InkOrbitFeatures
       className={className}
       theme="dark"
-      brand="FormSentry"
       revealThreshold={0.01}
-      tag="How FormSentry behaves"
+      tag="How the studio behaves"
       title="Every field, *validated* as you build"
       collaboration={{
         title: "Live form editing",
