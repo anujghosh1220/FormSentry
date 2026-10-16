@@ -279,7 +279,7 @@ function Mark({ size = 18 }: { size?: number }) {
   // the brand glyph: a folded R
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M3 21V3h4.2l9.6 12.2V3H21v18h-4.2L7.2 8.8V21z" fill="currentColor" />
+      <path d="M3 21V3H16L18 5V10L16 12 21 21H16L12 12H7.2V21Z M7.2 5V10H16V5Z" fill="currentColor" fillRule="evenodd" />
     </svg>
   )
 }
