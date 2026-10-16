@@ -134,7 +134,7 @@ const D_FEATURES: InkFeatures = {
 
 export default function InkOrbitFeatures({
   theme = "auto",
-  brand = "NeuraForge AI",
+  brand = "replaytide",
   tag = D_FEATURES.tag,
   title = D_FEATURES.title,
   revealThreshold = 0.12,
@@ -276,7 +276,7 @@ function Title({
 }
 
 function Mark({ size = 18 }: { size?: number }) {
-  // the brand glyph: a folded N
+  // the brand glyph: a folded R
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
       <path d="M3 21V3h4.2l9.6 12.2V3H21v18h-4.2L7.2 8.8V21z" fill="currentColor" />
